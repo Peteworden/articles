@@ -1,0 +1,210 @@
+# Pythonで使える天文系のライブラリなど
+
+
+---
+## 目次
+---
+- [Pythonで使える天文系のライブラリなど](#pythonで使える天文系のライブラリなど)
+  - [目次](#目次)
+  - [astroquery.jplhorizons](#astroqueryjplhorizons)
+    - [インポート、準備](#インポート準備)
+    - [データの取得](#データの取得)
+      - [赤経、赤緯などを取得](#赤経赤緯などを取得)
+        - [使えそうな要素](#使えそうな要素)
+      - [位置や速度を直交座標で取得](#位置や速度を直交座標で取得)
+        - [使えそうな要素](#使えそうな要素-1)
+    - [データの利用](#データの利用)
+  - [使用例](#使用例)
+    - [地球の周りを公転する月](#地球の周りを公転する月)
+      - [プログラム](#プログラム)
+      - [実行結果](#実行結果)
+
+---
+## astroquery.jplhorizons
+---
+太陽系天体の軌道要素や位置を取得できます。
+
+Horizons system: [https://ssd.jpl.nasa.gov/horizons/app.html#/](https://ssd.jpl.nasa.gov/horizons/app.html#/)
+←idや得られる値の説明などはここに詳しく書いてある
+
+### インポート、準備
+```python
+from astroquery.jplhorizons import Horizons
+import pandas as pd
+import os
+# ファイルを保存するときのために
+script_dir = os.path.dirname(__file__)
+```
+
+### データの取得
+```python
+obj_id = '301'
+location = '500@10'
+start = '2025-01-01'
+stop = '2025-12-31'
+step = '12h'
+obj = Horizons(id=obj_id, location=location, epochs={'start': start, 'stop': stop, 'step': step})
+# (id='301', location='500@10', ...と書いても全く問題ない
+```
+- id: 何を見るか
+    - 599: 木星（n99で第n惑星）
+    - 301: 月（m0nで第m惑星の第n衛星）
+    - 501: イオ
+    - 31416: Peteworden（小惑星番号）
+- location: どこから見るか
+    - 500@10: 太陽
+    - 500@399: 地球の中心（500@n99でn番目の惑星の中心）
+- epochs: start, stopを含む
+    - start, stopはyyyy-dd-mm, yyyy-dd-mm hh:mm, ユリウス日など。時刻系は後述
+    - stepは12h, 3dなど
+
+**Note**: 同じ天体でもidにするかlocationにするかで記号が異なる
+
+#### 赤経、赤緯などを取得
+ephemerides()を使います。時刻系は世界時UTです。
+```python
+# ephemerides()で位置などの情報が得られる
+data = obj.ephemerides().to_pandas()
+# Pythonプログラムと同じフォルダに保存
+file_name = f'{obj_id}_{location}_{start}_{end}_{step}.csv'
+file_path = os.path.join(script_dir, file_name)
+data.to_csv(file_path, index=False)
+```
+##### 使えそうな要素
+- datetime_str: 2000-JAN-01 00:00の形式
+- datetime_jd: ユリウス日
+- RA: 赤経 (ICRF, deg)
+- DEC: 赤緯 (ICRF, deg)
+- V: 等級
+- r: 太陽からの距離(au)
+- delta: 観測者からの距離(au)
+
+ほかの要素はCSVファイルを参照。
+
+**Note:** データを取得するのには時間がかかるため、すでにダウンロードしていないかチェックして、まだの場合だけ取得するようにするとよい。
+```python
+try:
+    data = pd.read_csv(filename)
+except:
+    obj = Horizons(id=id_obj, location=location, epochs={'start': start, 'stop': stop, 'step': step})
+    data = obj.ephemerides().to_pandas()
+    data.to_csv(filename, index=False)
+```
+
+#### 位置や速度を直交座標で取得
+vectors()を使います。時刻系は太陽系力学時TDBです。TDBは地球時TTとほぼ同じで、世界時UTよりは70秒ぐらい進んでいます。
+```python
+data = obj.vectors().to_pandas()
+```
+##### 使えそうな要素
+- datetime_str: A.D.2000-JAN-01 00:00の形式
+- datetime_jd: ユリウス日
+- x, y, z: 位置(J2000.0の黄道直交座標, au)
+- vx, vy, vz: 速度(J2000.0の黄道直交座標, 単位は調べてない)
+- range: 観測者からの距離(au)
+
+### データの利用
+具体的な値を知りたい！
+```python
+time = data['datetime_jd'].values
+
+# ephemerides()
+ra = data['RA'].values
+
+# vectors()
+x = data['x'].values
+```
+などなど。
+
+---
+## 使用例
+---
+図示を中心に、概ねシンプルな順に。以下、UTとTDBは同じとみなします
+
+<details>
+<summary>地球の周りを公転する月</summary>
+
+### 地球の周りを公転する月
+2025年1月1日0時UTから2025年12月31日0時UTまでの毎日の月の位置を図にする。
+
+#### プログラム
+```python
+from astroquery.jplhorizons import Horizons
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+import pandas as pd
+import os
+
+script_dir = os.path.dirname(__file__)
+obj_id = '301' # 月
+location = '500@399' # 地球
+start = '2025-01-01'
+stop = '2025-12-31'
+step = '1d' # 1日ごと
+
+# vectors()
+file_name = f'{obj_id}_{location}_{start}_{stop}_{step}_vectors.csv'
+file_path = os.path.join(script_dir, file_name)
+try:
+    data_vectors = pd.read_csv(file_path)
+except:
+    obj = Horizons(id=obj_id, location=location, epochs={'start': start, 'stop': stop, 'step': step})
+    data_vectors = obj.vectors().to_pandas()
+    data_vectors.to_csv(file_path, index=False)
+
+# ephemerides()
+file_name = f'{obj_id}_{location}_{start}_{stop}_{step}_ephemerides.csv'
+file_path = os.path.join(script_dir, file_name)
+try:
+    data_ephemerides = pd.read_csv(file_path)
+except:
+    obj = Horizons(id=obj_id, location=location, epochs={'start': start, 'stop': stop, 'step': step})
+    data_ephemerides = obj.ephemerides().to_pandas()
+    data_ephemerides.to_csv(file_path, index=False)
+
+x = data_vectors['x'].values
+y = data_vectors['y'].values
+z = data_vectors['z'].values
+
+ra = data_ephemerides['RA'].values
+dec = data_ephemerides['DEC'].values
+
+# 地球
+r = 6378 / 1.496e8 # 地球の半径を天文単位に変換
+u = np.linspace(0, 2 * np.pi, 10)
+v = np.linspace(0, np.pi, 10)
+x_earth = r * np.outer(np.cos(u), np.sin(v))
+y_earth = r * np.outer(np.sin(u), np.sin(v))
+z_earth = r * np.outer(np.ones(np.size(u)), np.cos(v))
+
+fig = plt.figure(figsize=(10, 4))
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.set_xlim(-0.003, 0.003)
+ax1.set_ylim(-0.003, 0.003)
+ax1.set_zlim(-0.003, 0.003)
+ax1.plot_surface(x_earth, y_earth, z_earth, color='blue', alpha=0.5)
+ax1.scatter(x, y, z, c='blue', s=1, marker='o')
+ax1.set_xlabel('x')
+ax1.set_ylabel('y')
+ax1.set_zlabel('z')
+ax1.set_title('x, y, z')
+
+ax2 = fig.add_subplot(122)
+ax2.set_aspect('equal')
+ax2.set_xlim(360, 0)
+ax2.set_ylim(-90, 90)
+ax2.scatter(ra, dec, c='blue', s=1, marker='o')
+ax2.set_xlabel('R.A.')
+ax2.set_ylabel('Dec.')
+ax2.set_title('R.A. and Dec.')
+ax2.grid()
+
+fig.tight_layout(rect=[0, 0, 0.95, 1])
+plt.subplots_adjust(wspace=0.2)
+plt.savefig(os.path.join(script_dir, 'moon.png'), dpi=300)
+plt.show()
+```
+#### 実行結果
+![moon.png](moon.png)
+</details>
