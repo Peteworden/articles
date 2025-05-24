@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>kaisetsu.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="python%E3%81%A7%E4%BD%BF%E3%81%88%E3%82%8B%E5%A4%A9%E6%96%87%E7%B3%BB%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%81%AA%E3%81%A9">Pythonで使える天文系のライブラリなど</h1>
+<hr>
+<h2 id="%E7%9B%AE%E6%AC%A1">目次</h2>
+<hr>
+<ul>
+<li><a href="#python%E3%81%A7%E4%BD%BF%E3%81%88%E3%82%8B%E5%A4%A9%E6%96%87%E7%B3%BB%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%81%AA%E3%81%A9">Pythonで使える天文系のライブラリなど</a>
+<ul>
+<li><a href="#%E7%9B%AE%E6%AC%A1">目次</a></li>
+<li><a href="#astroqueryjplhorizons">astroquery.jplhorizons</a>
+<ul>
+<li><a href="#%E3%82%A4%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%88%E6%BA%96%E5%82%99">インポート、準備</a></li>
+<li><a href="#%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%8F%96%E5%BE%97">データの取得</a>
+<ul>
+<li><a href="#%E8%B5%A4%E7%B5%8C%E8%B5%A4%E7%B7%AF%E3%81%AA%E3%81%A9%E3%82%92%E5%8F%96%E5%BE%97">赤経、赤緯などを取得</a>
+<ul>
+<li><a href="#%E4%BD%BF%E3%81%88%E3%81%9D%E3%81%86%E3%81%AA%E8%A6%81%E7%B4%A0">使えそうな要素</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%8D%E7%BD%AE%E3%82%84%E9%80%9F%E5%BA%A6%E3%82%92%E7%9B%B4%E4%BA%A4%E5%BA%A7%E6%A8%99%E3%81%A7%E5%8F%96%E5%BE%97">位置や速度を直交座標で取得</a>
+<ul>
+<li><a href="#%E4%BD%BF%E3%81%88%E3%81%9D%E3%81%86%E3%81%AA%E8%A6%81%E7%B4%A0-1">使えそうな要素</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%88%A9%E7%94%A8">データの利用</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E4%BE%8B">使用例</a>
+<ul>
+<li><a href="#%E5%9C%B0%E7%90%83%E3%81%AE%E5%91%A8%E3%82%8A%E3%82%92%E5%85%AC%E8%BB%A2%E3%81%99%E3%82%8B%E6%9C%88">地球の周りを公転する月</a>
+<ul>
+<li><a href="#%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0">プログラム</a></li>
+<li><a href="#%E5%AE%9F%E8%A1%8C%E7%B5%90%E6%9E%9C">実行結果</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="astroqueryjplhorizons">astroquery.jplhorizons</h2>
+<hr>
+<p>太陽系天体の軌道要素や位置を取得できます。</p>
+<p>Horizons system: <a href="https://ssd.jpl.nasa.gov/horizons/app.html#/">https://ssd.jpl.nasa.gov/horizons/app.html#/</a>
+←idや得られる値の説明などはここに詳しく書いてある</p>
+<h3 id="%E3%82%A4%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%88%E6%BA%96%E5%82%99">インポート、準備</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> astroquery.jplhorizons <span class="hljs-keyword">import</span> Horizons
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> os
+<span class="hljs-comment"># ファイルを保存するときのために</span>
+script_dir = os.path.dirname(__file__)
+</div></code></pre>
+<h3 id="%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%8F%96%E5%BE%97">データの取得</h3>
+<pre class="hljs"><code><div>obj_id = <span class="hljs-string">'301'</span>
+location = <span class="hljs-string">'500@10'</span>
+start = <span class="hljs-string">'2025-01-01'</span>
+stop = <span class="hljs-string">'2025-12-31'</span>
+step = <span class="hljs-string">'12h'</span>
+obj = Horizons(id=obj_id, location=location, epochs={<span class="hljs-string">'start'</span>: start, <span class="hljs-string">'stop'</span>: stop, <span class="hljs-string">'step'</span>: step})
+<span class="hljs-comment"># (id='301', location='500@10', ...と書いても全く問題ない</span>
+</div></code></pre>
+<ul>
+<li>id: 何を見るか
+<ul>
+<li>599: 木星（n99で第n惑星）</li>
+<li>301: 月（m0nで第m惑星の第n衛星）</li>
+<li>501: イオ</li>
+<li>31416: Peteworden（小惑星番号）</li>
+</ul>
+</li>
+<li>location: どこから見るか
+<ul>
+<li>500@10: 太陽</li>
+<li>500@399: 地球の中心（500@n99でn番目の惑星の中心）</li>
+</ul>
+</li>
+<li>epochs: start, stopを含む
+<ul>
+<li>start, stopはyyyy-dd-mm, yyyy-dd-mm hh:mm, ユリウス日など。時刻系は後述</li>
+<li>stepは12h, 3dなど</li>
+</ul>
+</li>
+</ul>
+<p><strong>Note</strong>: 同じ天体でもidにするかlocationにするかで記号が異なる</p>
+<h4 id="%E8%B5%A4%E7%B5%8C%E8%B5%A4%E7%B7%AF%E3%81%AA%E3%81%A9%E3%82%92%E5%8F%96%E5%BE%97">赤経、赤緯などを取得</h4>
+<p>ephemerides()を使います。時刻系は世界時UTです。</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># ephemerides()で位置などの情報が得られる</span>
+data = obj.ephemerides().to_pandas()
+<span class="hljs-comment"># Pythonプログラムと同じフォルダに保存</span>
+file_name = <span class="hljs-string">f'<span class="hljs-subst">{obj_id}</span>_<span class="hljs-subst">{location}</span>_<span class="hljs-subst">{start}</span>_<span class="hljs-subst">{end}</span>_<span class="hljs-subst">{step}</span>.csv'</span>
+file_path = os.path.join(script_dir, file_name)
+data.to_csv(file_path, index=<span class="hljs-literal">False</span>)
+</div></code></pre>
+<h5 id="%E4%BD%BF%E3%81%88%E3%81%9D%E3%81%86%E3%81%AA%E8%A6%81%E7%B4%A0">使えそうな要素</h5>
+<ul>
+<li>datetime_str: 2000-JAN-01 00:00の形式</li>
+<li>datetime_jd: ユリウス日</li>
+<li>RA: 赤経 (ICRF, deg)</li>
+<li>DEC: 赤緯 (ICRF, deg)</li>
+<li>V: 等級</li>
+<li>r: 太陽からの距離(au)</li>
+<li>delta: 観測者からの距離(au)</li>
+</ul>
+<p>ほかの要素はCSVファイルを参照。</p>
+<p><strong>Note:</strong> データを取得するのには時間がかかるため、すでにダウンロードしていないかチェックして、まだの場合だけ取得するようにするとよい。</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">try</span>:
+    data = pd.read_csv(filename)
+<span class="hljs-keyword">except</span>:
+    obj = Horizons(id=id_obj, location=location, epochs={<span class="hljs-string">'start'</span>: start, <span class="hljs-string">'stop'</span>: stop, <span class="hljs-string">'step'</span>: step})
+    data = obj.ephemerides().to_pandas()
+    data.to_csv(filename, index=<span class="hljs-literal">False</span>)
+</div></code></pre>
+<h4 id="%E4%BD%8D%E7%BD%AE%E3%82%84%E9%80%9F%E5%BA%A6%E3%82%92%E7%9B%B4%E4%BA%A4%E5%BA%A7%E6%A8%99%E3%81%A7%E5%8F%96%E5%BE%97">位置や速度を直交座標で取得</h4>
+<p>vectors()を使います。時刻系は太陽系力学時TDBです。TDBは地球時TTとほぼ同じで、世界時UTよりは70秒ぐらい進んでいます。</p>
+<pre class="hljs"><code><div>data = obj.vectors().to_pandas()
+</div></code></pre>
+<h5 id="%E4%BD%BF%E3%81%88%E3%81%9D%E3%81%86%E3%81%AA%E8%A6%81%E7%B4%A0">使えそうな要素</h5>
+<ul>
+<li>datetime_str: A.D.2000-JAN-01 00:00の形式</li>
+<li>datetime_jd: ユリウス日</li>
+<li>x, y, z: 位置(J2000.0の黄道直交座標, au)</li>
+<li>vx, vy, vz: 速度(J2000.0の黄道直交座標, 単位は調べてない)</li>
+<li>range: 観測者からの距離(au)</li>
+</ul>
+<h3 id="%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%88%A9%E7%94%A8">データの利用</h3>
+<p>具体的な値を知りたい！</p>
+<pre class="hljs"><code><div>time = data[<span class="hljs-string">'datetime_jd'</span>].values
+
+<span class="hljs-comment"># ephemerides()</span>
+ra = data[<span class="hljs-string">'RA'</span>].values
+
+<span class="hljs-comment"># vectors()</span>
+x = data[<span class="hljs-string">'x'</span>].values
+</div></code></pre>
+<p>などなど。</p>
+<hr>
+<h2 id="%E4%BD%BF%E7%94%A8%E4%BE%8B">使用例</h2>
+<hr>
+<p>図示を中心に、概ねシンプルな順に。以下、UTとTDBは同じとみなします</p>
+<details>
+<summary>地球の周りを公転する月</summary>
+<h3 id="%E5%9C%B0%E7%90%83%E3%81%AE%E5%91%A8%E3%82%8A%E3%82%92%E5%85%AC%E8%BB%A2%E3%81%99%E3%82%8B%E6%9C%88">地球の周りを公転する月</h3>
+<p>2025年1月1日0時UTから2025年12月31日0時UTまでの毎日の月の位置を図にする。</p>
+<h4 id="%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0">プログラム</h4>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> astroquery.jplhorizons <span class="hljs-keyword">import</span> Horizons
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+<span class="hljs-keyword">from</span> mpl_toolkits.mplot3d <span class="hljs-keyword">import</span> Axes3D
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> os
+
+script_dir = os.path.dirname(__file__)
+obj_id = <span class="hljs-string">'301'</span> <span class="hljs-comment"># 月</span>
+location = <span class="hljs-string">'500@399'</span> <span class="hljs-comment"># 地球</span>
+start = <span class="hljs-string">'2025-01-01'</span>
+stop = <span class="hljs-string">'2025-12-31'</span>
+step = <span class="hljs-string">'1d'</span> <span class="hljs-comment"># 1日ごと</span>
+
+<span class="hljs-comment"># vectors()</span>
+file_name = <span class="hljs-string">f'<span class="hljs-subst">{obj_id}</span>_<span class="hljs-subst">{location}</span>_<span class="hljs-subst">{start}</span>_<span class="hljs-subst">{stop}</span>_<span class="hljs-subst">{step}</span>_vectors.csv'</span>
+file_path = os.path.join(script_dir, file_name)
+<span class="hljs-keyword">try</span>:
+    data_vectors = pd.read_csv(file_path)
+<span class="hljs-keyword">except</span>:
+    obj = Horizons(id=obj_id, location=location, epochs={<span class="hljs-string">'start'</span>: start, <span class="hljs-string">'stop'</span>: stop, <span class="hljs-string">'step'</span>: step})
+    data_vectors = obj.vectors().to_pandas()
+    data_vectors.to_csv(file_path, index=<span class="hljs-literal">False</span>)
+
+<span class="hljs-comment"># ephemerides()</span>
+file_name = <span class="hljs-string">f'<span class="hljs-subst">{obj_id}</span>_<span class="hljs-subst">{location}</span>_<span class="hljs-subst">{start}</span>_<span class="hljs-subst">{stop}</span>_<span class="hljs-subst">{step}</span>_ephemerides.csv'</span>
+file_path = os.path.join(script_dir, file_name)
+<span class="hljs-keyword">try</span>:
+    data_ephemerides = pd.read_csv(file_path)
+<span class="hljs-keyword">except</span>:
+    obj = Horizons(id=obj_id, location=location, epochs={<span class="hljs-string">'start'</span>: start, <span class="hljs-string">'stop'</span>: stop, <span class="hljs-string">'step'</span>: step})
+    data_ephemerides = obj.ephemerides().to_pandas()
+    data_ephemerides.to_csv(file_path, index=<span class="hljs-literal">False</span>)
+
+x = data_vectors[<span class="hljs-string">'x'</span>].values
+y = data_vectors[<span class="hljs-string">'y'</span>].values
+z = data_vectors[<span class="hljs-string">'z'</span>].values
+
+ra = data_ephemerides[<span class="hljs-string">'RA'</span>].values
+dec = data_ephemerides[<span class="hljs-string">'DEC'</span>].values
+
+<span class="hljs-comment"># 地球</span>
+r = <span class="hljs-number">6378</span> / <span class="hljs-number">1.496e8</span> <span class="hljs-comment"># 地球の半径を天文単位に変換</span>
+u = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">2</span> * np.pi, <span class="hljs-number">10</span>)
+v = np.linspace(<span class="hljs-number">0</span>, np.pi, <span class="hljs-number">10</span>)
+x_earth = r * np.outer(np.cos(u), np.sin(v))
+y_earth = r * np.outer(np.sin(u), np.sin(v))
+z_earth = r * np.outer(np.ones(np.size(u)), np.cos(v))
+
+fig = plt.figure(figsize=(<span class="hljs-number">10</span>, <span class="hljs-number">4</span>))
+ax1 = fig.add_subplot(<span class="hljs-number">121</span>, projection=<span class="hljs-string">'3d'</span>)
+ax1.set_xlim(<span class="hljs-number">-0.003</span>, <span class="hljs-number">0.003</span>)
+ax1.set_ylim(<span class="hljs-number">-0.003</span>, <span class="hljs-number">0.003</span>)
+ax1.set_zlim(<span class="hljs-number">-0.003</span>, <span class="hljs-number">0.003</span>)
+ax1.plot_surface(x_earth, y_earth, z_earth, color=<span class="hljs-string">'blue'</span>, alpha=<span class="hljs-number">0.5</span>)
+ax1.scatter(x, y, z, c=<span class="hljs-string">'blue'</span>, s=<span class="hljs-number">1</span>, marker=<span class="hljs-string">'o'</span>)
+ax1.set_xlabel(<span class="hljs-string">'x'</span>)
+ax1.set_ylabel(<span class="hljs-string">'y'</span>)
+ax1.set_zlabel(<span class="hljs-string">'z'</span>)
+ax1.set_title(<span class="hljs-string">'x, y, z'</span>)
+
+ax2 = fig.add_subplot(<span class="hljs-number">122</span>)
+ax2.set_aspect(<span class="hljs-string">'equal'</span>)
+ax2.set_xlim(<span class="hljs-number">360</span>, <span class="hljs-number">0</span>)
+ax2.set_ylim(<span class="hljs-number">-90</span>, <span class="hljs-number">90</span>)
+ax2.scatter(ra, dec, c=<span class="hljs-string">'blue'</span>, s=<span class="hljs-number">1</span>, marker=<span class="hljs-string">'o'</span>)
+ax2.set_xlabel(<span class="hljs-string">'R.A.'</span>)
+ax2.set_ylabel(<span class="hljs-string">'Dec.'</span>)
+ax2.set_title(<span class="hljs-string">'R.A. and Dec.'</span>)
+ax2.grid()
+
+fig.tight_layout(rect=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.95</span>, <span class="hljs-number">1</span>])
+plt.subplots_adjust(wspace=<span class="hljs-number">0.2</span>)
+plt.savefig(os.path.join(script_dir, <span class="hljs-string">'moon.png'</span>), dpi=<span class="hljs-number">300</span>)
+plt.show()
+</div></code></pre>
+<h4 id="%E5%AE%9F%E8%A1%8C%E7%B5%90%E6%9E%9C">実行結果</h4>
+<p><img src="images/moon.png" alt="moon.png"></p>
+</details>
+
+</body>
+</html>
